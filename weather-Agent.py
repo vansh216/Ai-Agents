@@ -1,5 +1,6 @@
 import os
 import json
+import requests
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
@@ -11,8 +12,11 @@ if not api_key:
 
 def get_weather(city: str) -> str:
     # Replace this with a real API call (e.g. OpenWeatherMap)
-    fake_data = {"delhi": "32 degree cel", "pune": "27 degree cel"}
-    return fake_data.get(city.lower(), "Weather data not available")
+    url= f"https://wttr.in/{city}?format=%C+%t"
+    response= requests.get(url)
+    if response.status_code==200:
+        return f"weather in the {city} is {response.text}"
+    return "weather not found of this city!!"
 
 available_tools = {
     "get_weather": get_weather
