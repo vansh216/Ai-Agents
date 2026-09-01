@@ -1,6 +1,7 @@
 import os
 import json
 import requests
+import subprocess
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
@@ -18,8 +19,13 @@ def get_weather(city: str) -> str:
         return f"weather in the {city} is {response.text}"
     return "weather not found of this city!!"
 
+def run_command(command:str):
+    result = subprocess.run(command, shell=True, capture_output=True, text=True)
+    return result.stdout
+
 available_tools = {
-    "get_weather": get_weather
+    "get_weather": get_weather,
+    "run_command":run_command
 }
 
 client = genai.Client(api_key=api_key)
@@ -39,6 +45,7 @@ Output JSON format:
 
 Available tools:
 - get_weather(city: str): returns the current weather for a given city name
+-run_command(command): return the subprocess of that command
 
 Example:
 User Query: What is the weather of Delhi?
